@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Generator</title>
+</head>
+<body>
+
+<div class="meme-form">
+    <div class="meme-container">
+        <label for="meme-field" id="meme-field">
+            <div class="meme-select">
+                <div class="scroll-container">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <a class="nav nav-pills nav-item nav-link active" id="user-upload" aria-current="page" href="{{ url_for('site.upload_route') }}">Upload your own IMG</a>
+                        </li>
+                    </ul>
+                    <img src="{{ url_for('static', filename='/images/face.jpg') }}" alt="" id="img1" onclick="displayMeme(this.src)">
+                    <img src="{{ url_for('static', filename='/images/passnote.jpg') }}" alt="" id="img2" onclick="displayMeme(this.src)">
+                    <img src="{{ url_for('static', filename='/images/vincemcmahon.jpeg') }}" alt="" id=""img3" onclick="displayMeme(this.src)">
+                    <img src="{{ url_for('static', filename='/images/spongebob.webp') }}" alt="" id="img4" onclick="displayMeme(this.src)">
+                    <img src="{{ url_for('static', filename='/images/Distracted-Boyfriend.jpg') }}" alt="" id="img5" onclick="displayMeme(this.src)">
+                    <img src="{{ url_for('static', filename='/images/Drake-Hotline-Bling.jpg' )}}" alt="" id="img6" onclick="displayMeme(this.src)">
+                    <img src="{{ url_for('static', filename='/images/Left-Exit-12-Off-Ramp.jpg') }}" alt="" id="img7" onclick="displayMeme(this.src)">
+                    <img src="{{ url_for('static', filename='/images/One-Does-Not-Simply.jpg') }}" alt="" id="img8"  onclick="displayMeme(this.src)">
+                    <img src="{{ url_for('static', filename='/images/Tuxedo-Winnie-The-Pooh.png') }}" alt="" id="img9" onclick="displayMeme(this.src)">
+                    <img src="{{ url_for('static', filename='/images/Two-Buttons.jpg') }}" alt="" id="img10" onclick="displayMeme(this.src)">
+                    {% if uploaded_image %}
+                    <img src="{{ url_for('site.display_image', image_id=uploaded_image.id) }}" alt="" id="img11" onclick="displayMeme(this.src)">
+                    {% endif %}
+                
+                </div>
+            </div>
+            <div class="meme-display-options">
+                <div id="meme-display">
+                    <!-- Empty to hold img popup -->
+                </div>
+                <div id="meme-options">
+                    <label for="top-text-input">Top Text:</label>
+                    <input type="text" id="top-text-input" name="top-text-input">
+                    <br>
+                    <label for="bottom-text-input">Bottom Text:</label>
+                    <input type="text" id="bottom-text-input" name="bottom-text-input">
+                    <button onclick="submitText()">Submit</button>
+                </div>
+            </div>
+        </label>
+    </div>
+</div>
+
+<script>
+    function displayMeme(src) {
+        var memeDisplay = document.getElementById('meme-display');
+
+        var selectedMeme = document.createElement('img');
+        selectedMeme.src = src;
+        selectedMeme.alt = 'Selected meme';
+
+        var topText = document.createElement('div');
+        topText.innerText = document.getElementById('top-text-input').value;
+        topText.classList.add('top-text');
+
+        var bottomText = document.createElement('div');
+        bottomText.innerText = document.getElementById('bottom-text-input').value;
+        bottomText.classList.add('bottom-text');
+
+        memeDisplay.innerHTML = '';
+
+        memeDisplay.appendChild(selectedMeme);
+        memeDisplay.appendChild(topText);
+        memeDisplay.appendChild(bottomText);
+    }
+
+    function submitText() {
+        var topTextValue = document.getElementById('top-text-input').value;
+        var bottomTextValue = document.getElementById('bottom-text-input').value;
+
+        clearText();
+        var memeDisplay = document.getElementById('meme-display');
+        var topText = document.createElement('div');
+        topText.innerText = topTextValue;
+        topText.classList.add('top-text');
+
+        var bottomText = document.createElement('div');
+        bottomText.innerText = bottomTextValue;
+        bottomText.classList.add('bottom-text');
+
+        var memeDisplay =  document.getElementById('meme-display');
+        topText.style.position = 'absolute';
+        bottomText.style.position = 'absolute';
+        topText.style.left = '50%';
+        topText.style.top = '10%';
+        bottomText.style.left = '50%';
+        bottomText.style.bottom = '10%';
+        memeDisplay.appendChild(topText);
+        memeDisplay.appendChild(bottomText);
+
+        clearInputFields();
+    }
+
+    function clearInputFields() {
+        document.getElementById('top-text-input').value = '';
+        document.getElementById('bottom-text-input').value = '';
+    }
+
+    function clearText() {
+        var memeDisplay = document.getElementById('meme-display');
+
+        var textElements = memeDisplay.getElementsByClassName('top-text');
+    while (textElements.length > 0) {
+        textElements[0].parentNode.removeChild(textElements[0]);
+    }
+
+    textElements = memeDisplay.getElementsByClassName('bottom-text');
+    while (textElements.length > 0) {
+        textElements[0].parentNode.removeChild(textElements[0]);
+    }
+}
+
+</script>

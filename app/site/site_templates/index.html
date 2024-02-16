@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+<section class="bg-dark text-light text-center shadow">
+    <div class="container p-5 bg-dark">
+        <div class="row">
+            <div class="d-md-flex bg-dark align-items-center justify-content-evenly">
+                <h1 class="col text-center"><br>TBT Meme Generator</h1>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="bg-dark text-center">
+    <div class="container p-5">
+        <div class="row">
+            <div class="d-flex align-items-center justify-content-center">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                      <a class="nav-link active" aria-current="page" href="{{ url_for('site.about') }}">About TBT</a>
+                    </li>
+                  </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

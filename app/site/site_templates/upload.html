@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %} 
+    <div class="d-flex align-items-center justify-content-center">
+        <div class="hero">
+            <form action="{{ url_for('site.upload_route')  }}" method="POST" enctype="multipart/form-data">
+                <label for="input-file" id="drop-area">
+                    <input type="file" name ="file" accept="image/*" id="input-file" hidden>
+                    <div id="imgg-view">
+                        <img src="{{ url_for('static', filename='/images/upload.svg') }}">
+                        <p>Drag and drop or click here<br>to upload image</p>
+                        <span>Upload any image from Local Storage</span>
+                    </div>
+                    <div id="img_sbmt" class="align-items-center">
+                        <button type="submit" class="btn btn-success">Upload</button>
+                    </div>
+                </label>
+            </form>
+        </div>
+    </div>
+    {% if uploaded_image %}
+        <img src="{{ url_for('site.display_image', image_id =  uploaded_image.id) }}" alt="Uploaded image">
+    {% endif %}
+{% endblock %}
+
+
