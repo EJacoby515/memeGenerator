@@ -147,3 +147,7 @@ div.scroll-container {
     left: 50%; 
     transform: translateX(-50%); 
 }
+
+#disclaimer{
+color: red;
+}
