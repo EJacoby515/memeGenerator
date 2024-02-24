@@ -19,7 +19,7 @@
         </div>
     </div>
     {% if uploaded_image %}
-        <img src="{{ url_for('site.display_image', image_id =  uploaded_image.id) }}" alt="Uploaded image">
+        <img src="{{ url_for('site.upload_route', image_id =  uploaded_image.id) }}" alt="Uploaded image">
     {% endif %}
 {% endblock %}
 

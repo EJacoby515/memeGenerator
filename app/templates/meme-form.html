@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meme Generator</title>
-</head>
-<body>
+
 
 <div class="meme-form">
     <div class="meme-container">
@@ -29,7 +21,7 @@
                     <img src="{{ url_for('static', filename='/images/Tuxedo-Winnie-The-Pooh.png') }}" alt="" id="img9" onclick="displayMeme(this.src)">
                     <img src="{{ url_for('static', filename='/images/Two-Buttons.jpg') }}" alt="" id="img10" onclick="displayMeme(this.src)">
                     {% if uploaded_image %}
-                    <img src="{{ url_for('site.display_image', image_id=uploaded_image.id) }}" alt="" id="img11" onclick="displayMeme(this.src)">
+                    <img src="{{ url_for('site.display_meme', image_id=uploaded_image.id) }}" alt="" id="img11" onclick="displayMeme(this.src)">
                     {% endif %}
                 
                 </div>

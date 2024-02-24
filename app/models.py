@@ -60,3 +60,19 @@ class Image(db.Model):
 
     def __repr__(self):
         return f"Image(id={self.id}, filename={self.filename})"
+
+    @classmethod
+    def delete_image(cls,image_id):
+        image = cls.query.get(image_id)
+        if image:
+            db.session.delete(image)
+            db.session.commit()
+
+
+    @classmethod
+    def update_image(cls, image_id,  new_filename):
+        image = cls.query.get(image_id)
+        if image:
+            image.filename = new_filename
+            db.session.commit()
+

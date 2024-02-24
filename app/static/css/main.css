@@ -104,7 +104,9 @@ div.scroll-container {
 
   #meme-display img{
     width: auto;
-    height: 300px;
+    max-width: 400px;
+    height:  auto;
+    max-height: 300px;
     margin-left: 10px;
     border: 1px solid #000;
   }

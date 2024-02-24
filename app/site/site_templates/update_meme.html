@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="meme-form">
+        <form action="{{ url_for('site.update_meme', image_id=meme.id) }}" method="POST">
+            <!-- Add any fields you want to update here -->
+            <!-- Example: <label for="new_filename">New Filename:</label>
+                       <input type="text" id="new_filename" name="new_filename" value="{{ meme.filename }}"> -->
+            
+            <button type="submit" class="btn btn-primary">Update Meme</button>
+        </form>
+    </div>
+{% endblock %}

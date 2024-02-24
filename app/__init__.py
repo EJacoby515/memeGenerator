@@ -13,6 +13,8 @@ def create_app():
     app = Flask(__name__, static_url_path='/static')
     CORS(app)
 
+    
+
     app.register_blueprint(site)
     app.register_blueprint(auth)
     app.register_blueprint(api)
