@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, redirect, flash, request, send_file, url_for
+from flask_login import current_user
 from app.models import db, Image as DBImage
 from .. import site
 from io import BytesIO
@@ -30,15 +31,18 @@ def allowed_file(filename):
 @site.route('/upload_route', methods=['GET','POST'])
 def upload_route():
     if 'file' not in request.files:
-        return render_template('upload.html')
+        return render_template('upload.html', error ='No file part')
 
     file = request.files['file']
+
+    if file.filename == '':
+        return render_template('upload.html',  error = 'No selected file')
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
         print('Received file:', filename)
 
-        pil_image = PILImage.open(BytesIO(file.read()))
+        pil_image = PILImage.open(file)
         pil_image = pil_image.convert('RGB')
 
         resized_image = pil_image.resize((450, 250), PILImage.BICUBIC)
@@ -46,7 +50,9 @@ def upload_route():
         image_data_io = BytesIO()
         resized_image.save(image_data_io, format='JPEG') 
 
-        new_image = DBImage(filename=filename, data=image_data_io.getvalue())
+        image_bytes = image_data_io.getvalue()
+
+        new_image = DBImage(filename=filename, data=image_bytes, user_id=current_user.id)
 
         db.session.add(new_image)
         db.session.commit()

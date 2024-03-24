@@ -58,9 +58,10 @@ class Image(db.Model):
     id =  db.Column(db.Integer, primary_key=True, autoincrement=True)
     filename = db.Column(db.String(255))
     data = db.Column(db.LargeBinary)
+    user_id = db.Column(db.String, db.ForeignKey('user.id'))
 
     def __repr__(self):
-        return f"Image(id={self.id}, filename={self.filename})"
+        return f"Image(id={self.id}, filename={self.filename}, user_id = {self.user_id})"
 
     @classmethod
     def delete_image(cls,image_id):
