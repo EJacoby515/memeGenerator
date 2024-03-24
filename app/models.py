@@ -56,7 +56,7 @@ class User(db.Model, UserMixin):
 class Image(db.Model):
     id =  db.Column(db.Integer, primary_key=True, autoincrement=True)
     filename = db.Column(db.String(255))
-    data = db.Column(db.BLOB)
+    data = db.Column(db.LargeBinary)
 
     def __repr__(self):
         return f"Image(id={self.id}, filename={self.filename})"
