@@ -9,6 +9,7 @@ from flask_login import LoginManager
 from flask_marshmallow import Marshmallow 
 from marshmallow  import  fields
 import secrets
+from sqlalchemy import LargeBinary
 
 login_manager = LoginManager()
 ma = Marshmallow()
