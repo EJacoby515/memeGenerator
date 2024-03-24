@@ -16,7 +16,7 @@ def get_user(current_user_token):
     }
     return jsonify(user), 200
 
-    @api.route('/images')
+@api.route('/images')
 def get_images():
     images = DBImage.query.all()
     image_data = [{'id': image.id, 'filename': image.filename} for image in images]
