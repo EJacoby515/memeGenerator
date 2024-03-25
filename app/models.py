@@ -60,6 +60,11 @@ class Image(db.Model):
     data = db.Column(db.LargeBinary)
     user_id = db.Column(db.String, db.ForeignKey('user.id'))
 
+    def __init__(self, filename, data, user_id):
+        self.filename = filename
+        self.data = data
+        self.user_id = user_id
+
     def __repr__(self):
         return f"Image(id={self.id}, filename={self.filename}, user_id = {self.user_id})"
 
