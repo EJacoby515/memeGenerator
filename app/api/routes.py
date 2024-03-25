@@ -1,28 +1,90 @@
-from flask import Blueprint, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+import uuid 
+from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
+from flask_login import LoginManager
+from flask_marshmallow import Marshmallow 
+from marshmallow  import  fields
+import secrets
+from sqlalchemy import LargeBinary
+from app.models import db, Image as DBImage
 from app.helpers import token_required
-from app.models import User,  Image as DBImage
+from flask import Blueprint, jsonify, request
 
 api = Blueprint('api', __name__, url_prefix='/api')
 
-@api.route('/user', methods=['GET'])
-@token_required
-def get_user(current_user_token):
-    # Example route that returns user information for an authenticated user
-    user = {
-        'id': current_user_token.id,
-        'email': current_user_token.email,
-        'first_name': current_user_token.first_name,
-        'last_name': current_user_token.last_name
-    }
-    return jsonify(user), 200
+# User Routes
 
-@api.route('/images')
+# GET route to fetch all users
+@api.route('/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    user_data = [{'id': user.id, 'email': user.email, 'first_name': user.first_name, 'last_name': user.last_name} for user in users]
+    return jsonify({'users': user_data})
+
+# POST route to create a new user
+@api.route('/users', methods=['POST'])
+def create_user():
+    data = request.json  # Assuming request body contains JSON data
+    new_user = User(email=data.get('email'), first_name=data.get('first_name'), last_name=data.get('last_name'), password=data.get('password'))
+    db.session.add(new_user)
+    db.session.commit()
+    return jsonify({'message': 'User created successfully'}), 201
+
+# PUT route to update an existing user
+@api.route('/users/<string:user_id>', methods=['PUT'])
+def update_user(user_id):
+    user = User.query.get_or_404(user_id)
+    data = request.json  # Assuming request body contains JSON data
+    user.email = data.get('email', user.email)
+    user.first_name = data.get('first_name', user.first_name)
+    user.last_name = data.get('last_name', user.last_name)
+    db.session.commit()
+    return jsonify({'message': 'User updated successfully'}), 200
+
+# DELETE route to delete an existing user
+@api.route('/users/<string:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({'message': 'User deleted successfully'}), 200
+
+# Image Routes
+
+# GET route to fetch all images
+@api.route('/images', methods=['GET'])
 def get_images():
     images = DBImage.query.all()
-    image_data = [{'id': image.id, 'filename': image.filename, 'user_id':  image.user_id } for image in images]
+    image_data = [{'id': image.id, 'filename': image.filename, 'user_id': image.user_id} for image in images]
     return jsonify({'images': image_data})
 
-@api.route('/images/<int:image_id>')
-def get_image(image_id):
+# POST route to create a new image
+@api.route('/images', methods=['POST'])
+def create_image():
+    # Assuming request body contains image data along with user_id
+    data = request.json
+    new_image = DBImage(filename=data.get('filename'), data=data.get('data'), user_id=data.get('user_id'))
+    db.session.add(new_image)
+    db.session.commit()
+    return jsonify({'message': 'Image created successfully'}), 201
+
+# PUT route to update an existing image
+@api.route('/images/<int:image_id>', methods=['PUT'])
+def update_image(image_id):
     image = DBImage.query.get_or_404(image_id)
-    return jsonify({'id': image.id, 'filename': image.filename, 'data': image.data.decode('utf-8')})
+    data = request.json  # Assuming request body contains JSON data
+    image.filename = data.get('filename', image.filename)
+    image.user_id = data.get('user_id', image.user_id)
+    db.session.commit()
+    return jsonify({'message': 'Image updated successfully'}), 200
+
+# DELETE route to delete an existing image
+@api.route('/images/<int:image_id>', methods=['DELETE'])
+def delete_image(image_id):
+    image = DBImage.query.get_or_404(image_id)
+    db.session.delete(image)
+    db.session.commit()
+    return jsonify({'message': 'Image deleted successfully'}), 200
