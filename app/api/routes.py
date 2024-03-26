@@ -58,8 +58,18 @@ def delete_user(user_id):
 @api.route('/images', methods=['GET'])
 def get_images():
     images = DBImage.query.all()
-    image_data = [{'id': image.id, 'filename': image.filename, 'user_id': image.user_id, 'data': image.data.decode } for image in images]
+    image_data = []
+
+    for image in images:
+        if image.data is not None:
+            decoded_data = image.data.decode('utf-8')
+        else:
+            decoded_data = None
+
+        image_data.append({'id': image.id, 'filename': image.filename, 'data': decoded_data, 'user_id': image.user_id })
+
     return jsonify({'images': image_data})
+
 
 # POST route to create a new image
 @api.route('/images', methods=['POST'])
