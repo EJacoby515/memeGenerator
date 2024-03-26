@@ -12,6 +12,7 @@ from sqlalchemy import LargeBinary
 from app.models import db, Image as DBImage
 from app.helpers import token_required
 from flask import Blueprint, jsonify, request
+import base64
 
 api = Blueprint('api', __name__, url_prefix='/api')
 
@@ -62,9 +63,11 @@ def get_images():
 
     for image in images:
         if image.data is not None:
-            image_data.append({'id': image.id, 'filename': image.filename, 'data': image.data, 'user_id': image.user_id })
+            encoded_data = base64.b64encode(image.data).decode('utf-8')
         else:
-            image_data.append({'id': image.id, 'filename': image.filename, 'data': None, 'user_id': image.user_id })
+            encoded_data = None
+
+        image_data.append({'id': image.id, 'filename': image.filename, 'data': encoded_data, 'user_id': image.user_id })
 
     return jsonify({'images': image_data})
 
