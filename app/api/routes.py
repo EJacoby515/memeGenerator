@@ -62,13 +62,12 @@ def get_images():
 
     for image in images:
         if image.data is not None:
-            decoded_data = image.data.decode('utf-8')
+            image_data.append({'id': image.id, 'filename': image.filename, 'data': image.data, 'user_id': image.user_id })
         else:
-            decoded_data = None
-
-        image_data.append({'id': image.id, 'filename': image.filename, 'data': decoded_data, 'user_id': image.user_id })
+            image_data.append({'id': image.id, 'filename': image.filename, 'data': None, 'user_id': image.user_id })
 
     return jsonify({'images': image_data})
+
 
 
 # POST route to create a new image
