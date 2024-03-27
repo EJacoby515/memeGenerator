@@ -76,6 +76,8 @@ def get_images():
 # POST route to create a new image
 @api.route('/images', methods=['POST'])
 def create_image():
+    print(request.files)
+    print(request.form)
     # Assuming request body contains image data along with user_id
     data = request.json
     new_image = DBImage(filename=data.get('filename'), data=data.get('data'), user_id=data.get('user_id'))
