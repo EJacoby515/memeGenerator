@@ -82,7 +82,7 @@ def create_image():
 
     if file:
         file_data = file.read()
-        new_image = DBImage(filename-filename, data=file_data, user_id=user_id)
+        new_image = DBImage(filename=filename, data=file_data, user_id=user_id)
         db.session.add(new_image)
         db.session.commit()
         return jsonify({'message': 'Image created successfully'}), 201
