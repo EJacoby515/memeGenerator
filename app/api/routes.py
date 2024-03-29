@@ -78,7 +78,7 @@ def get_images():
 def create_image():
     filename = request.form.get('filename')
     user_id = request.form.get('user_id')
-    file = request.form.get('file')
+    file = request.files.get('file')
 
     if file:
         file_data = file.read()
