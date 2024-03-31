@@ -86,21 +86,28 @@ def create_image():
         filename = request.form.get('filename')
         user_id = request.form.get('user_id')
 
+        print(f"Received image: {image}")
+        print(f"Filename: {filename}")
+        print(f"User ID: {user_id}")
+
         if not filename or not user_id:
             return jsonify({'error': 'Missing filename or user_id'}), 400
 
         try:
             img_data = base64.b64encode(image.read()).decode('utf-8')
+
             new_image = DBImage(filename=filename, data=img_data, user_id=user_id)
             db.session.add(new_image)
             db.session.commit()
+
+            print("Image created successfully")
             return jsonify({'message': 'Image created successfully', 'image_id': new_image.id, 'filename': new_image.filename, 'user_id': new_image.user_id}), 201
         except Exception as e:
             db.session.rollback()
+            print(f"Error creating image: {str(e)}")
             return jsonify({'error': 'Error creating image', 'message': str(e)}), 500
     else:
         return jsonify({'error': 'No file provided'}), 400
-
 # PUT route to update an existing image
 @api.route('/images/<int:image_id>', methods=['PUT'])
 def update_image(image_id):
