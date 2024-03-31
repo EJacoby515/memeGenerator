@@ -59,16 +59,21 @@ def delete_user(user_id):
 @api.route('/images', methods=['GET'])
 def get_images():
     images = DBImage.query.all()
+    print(f"Retrieved {len(images)} images from the database")
+    
     image_data = []
-
     for image in images:
+        print(f"Processing image: {image.id}")
         if image.data is not None:
             encoded_data = base64.b64encode(image.data).decode('utf-8')
+            print(f"Encoded data: {encoded_data[:20]}...")  # Print the first 20 characters of encoded data
         else:
+            print("Image data is None")
             encoded_data = None
-
-        image_data.append({'id': image.id, 'filename': image.filename, 'data': encoded_data, 'user_id': image.user_id })
-
+        
+        image_data.append({'id': image.id, 'filename': image.filename, 'data': encoded_data, 'user_id': image.user_id})
+    
+    print(f"Returning {len(image_data)} images")
     return jsonify({'images': image_data})
 
 
@@ -76,18 +81,24 @@ def get_images():
 # POST route to create a new image
 @api.route('/images', methods=['POST'])
 def create_image():
-    filename = request.form.get('filename')
-    user_id = request.form.get('user_id')
-    file = request.files.get('file')
+    if 'file' in request.files:
+        image = request.files['file']
+        filename = request.form.get('filename')  # Get filename from form data
+        user_id = request.form.get('user_id')  # Get user_id from form data
+        
+        # Read image data and encode it to base64
+        img_data = base64.b64encode(image.read()).decode('utf-8')
 
-    if file:
-        file_data = file.read()
-        new_image = DBImage(filename=filename, data=file_data, user_id=user_id)
+        # Create a new Image instance and add it to the database
+        new_image = image(filename=filename, data=img_data, user_id=user_id)
         db.session.add(new_image)
         db.session.commit()
-        return jsonify({'message': 'Image created successfully'}), 201
+
+        # Return success message with image details
+        return jsonify({'message': 'Image created successfully', 'image_id': new_image.id, 'filename': new_image.filename, 'user_id': new_image.user_id}), 201
     else:
-        return jsonify({'error': 'No file provided'}),  400
+        # Return error message if no file is provided
+        return jsonify({'error': 'No file provided'}), 400
 
 # PUT route to update an existing image
 @api.route('/images/<int:image_id>', methods=['PUT'])
