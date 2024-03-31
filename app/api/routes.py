@@ -81,23 +81,24 @@ def get_images():
 # POST route to create a new image
 @api.route('/images', methods=['POST'])
 def create_image():
-    if 'file' in request.files:
-        image = request.files['file']
-        filename = request.form.get('filename')  # Get filename from form data
-        user_id = request.form.get('user_id')  # Get user_id from form data
-        
-        # Read image data and encode it to base64
-        img_data = base64.b64encode(image.read()).decode('utf-8')
+    if 'image' in request.files:
+        image = request.files['image']
+        filename = request.form.get('filename')
+        user_id = request.form.get('user_id')
 
-        # Create a new Image instance and add it to the database
-        new_image = image(filename=filename, data=img_data, user_id=user_id)
-        db.session.add(new_image)
-        db.session.commit()
+        if not filename or not user_id:
+            return jsonify({'error': 'Missing filename or user_id'}), 400
 
-        # Return success message with image details
-        return jsonify({'message': 'Image created successfully', 'image_id': new_image.id, 'filename': new_image.filename, 'user_id': new_image.user_id}), 201
+        try:
+            img_data = base64.b64encode(image.read()).decode('utf-8')
+            new_image = DBImage(filename=filename, data=img_data, user_id=user_id)
+            db.session.add(new_image)
+            db.session.commit()
+            return jsonify({'message': 'Image created successfully', 'image_id': new_image.id, 'filename': new_image.filename, 'user_id': new_image.user_id}), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': 'Error creating image', 'message': str(e)}), 500
     else:
-        # Return error message if no file is provided
         return jsonify({'error': 'No file provided'}), 400
 
 # PUT route to update an existing image
