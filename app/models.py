@@ -54,11 +54,11 @@ class User(db.Model, UserMixin):
     
 # class for image  DB
     
-class Image(db.Model):
-    id =  db.Column(db.Integer, primary_key=True, autoincrement=True)
-    filename = db.Column(db.String(100), nullable = False)
-    data = db.Column(db.LargeBinary, nullable = False)
-    user_id = db.Column(db.String, db.ForeignKey('user.id'))
+class DBImage(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    filename = db.Column(db.String(100), nullable=False)
+    data = db.Column(db.Text, nullable=False)
+    user_id = db.Column(db.String(100), nullable=False)
 
     def __init__(self, filename, data, user_id):
         self.filename = filename

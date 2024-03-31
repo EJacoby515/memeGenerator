@@ -78,9 +78,9 @@ def get_images():
 
 
 
-# POST route to create a new image
-@api.route('/images', methods=['POST'])
+# POST route to create a new image@api.route('/images', methods=['POST'])
 def create_image():
+    print("Received request to create image")
     if 'image' in request.files:
         image = request.files['image']
         filename = request.form.get('filename')
@@ -91,10 +91,12 @@ def create_image():
         print(f"User ID: {user_id}")
 
         if not filename or not user_id:
+            print("Missing filename or user_id")
             return jsonify({'error': 'Missing filename or user_id'}), 400
 
         try:
             img_data = base64.b64encode(image.read()).decode('utf-8')
+            print(f"Encoded image data: {img_data[:50]}...")  # Print the first 50 characters
 
             new_image = DBImage(filename=filename, data=img_data, user_id=user_id)
             db.session.add(new_image)
@@ -107,6 +109,7 @@ def create_image():
             print(f"Error creating image: {str(e)}")
             return jsonify({'error': 'Error creating image', 'message': str(e)}), 500
     else:
+        print("No file provided")
         return jsonify({'error': 'No file provided'}), 400
 # PUT route to update an existing image
 @api.route('/images/<int:image_id>', methods=['PUT'])
