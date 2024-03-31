@@ -76,37 +76,34 @@ def get_images():
     print(f"Returning {len(image_data)} images")
     return jsonify({'images': image_data})
 
-
 @api.route('/images', methods=['POST'])
 def create_image():
     print("Received request to create image")
-    if 'image' in request.files:
-        image = request.files['image']
-        filename = request.form.get('filename')
-        user_id = request.form.get('user_id')
+    filename = request.form.get('filename')
+    user_id = request.form.get('user_id')
+    image_data = request.form.get('image')
 
-        print(f"Received image: {image}")
-        print(f"Filename: {filename}")
-        print(f"User ID: {user_id}")
+    print(f"Filename: {filename}")
+    print(f"User ID: {user_id}")
 
-        if not filename or not user_id:
-            print("Missing filename or user_id")
-            return jsonify({'error': 'Missing filename or user_id'}), 400
+    if not filename or not user_id or not image_data:
+        print("Missing filename, user_id, or image data")
+        return jsonify({'error': 'Missing filename, user_id, or image data'}), 400
 
-        try:
-            img_data = base64.b64encode(image.read()).decode('utf-8')
-            print(f"Encoded image data: {img_data[:50]}...")  # Print the first 50 characters
+    try:
+        # Decode the base64-encoded image data
+        img_data = base64.b64decode(image_data)
 
-            new_image = DBImage(filename=filename, data=img_data, user_id=user_id)
-            db.session.add(new_image)
-            db.session.commit()
+        new_image = DBImage(filename=filename, data=img_data, user_id=user_id)
+        db.session.add(new_image)
+        db.session.commit()
 
-            print("Image created successfully")
-            return jsonify({'message': 'Image created successfully', 'image_id': new_image.id, 'filename': new_image.filename, 'user_id': new_image.user_id}), 201
-        except Exception as e:
-            db.session.rollback()
-            print(f"Error creating image: {str(e)}")
-            return jsonify({'error': 'Error creating image', 'message': str(e)}), 500
+        print("Image created successfully")
+        return jsonify({'message': 'Image created successfully', 'image_id': new_image.id, 'filename': new_image.filename, 'user_id': new_image.user_id}), 201
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error creating image: {str(e)}")
+        return jsonify({'error': 'Error creating image', 'message': str(e)}), 500
     else:
         print("No file provided")
         return jsonify({'error': 'No file provided'}), 400

@@ -10,6 +10,7 @@ from flask_marshmallow import Marshmallow
 from marshmallow  import  fields
 import secrets
 from sqlalchemy import LargeBinary
+import base64
 
 login_manager = LoginManager()
 ma = Marshmallow()
@@ -57,12 +58,12 @@ class User(db.Model, UserMixin):
 class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(100), nullable=False)
-    data = db.Column(db.Text, nullable=False)
+    data = db.Column(db.LargeBinary, nullable=False)
     user_id = db.Column(db.String(100), nullable=False)
 
     def __init__(self, filename, data, user_id):
         self.filename = filename
-        self.data = data
+        self.data = base64.b64decode(data)
         self.user_id = user_id
 
     def __repr__(self):
