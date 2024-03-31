@@ -90,7 +90,7 @@ def create_image():
         return jsonify({'error': 'Missing filename, user_id, or image data'}), 400
 
     try:
-        new_image = Image(filename=filename, data=image_data, user_id=user_id)
+        new_image = DBImage(filename=filename, data=image_data, user_id=user_id)
         db.session.add(new_image)
         db.session.commit()
 
