@@ -77,8 +77,7 @@ def get_images():
     return jsonify({'images': image_data})
 
 
-
-# POST route to create a new image@api.route('/images', methods=['POST'])
+@api.route('/images', methods=['POST'])
 def create_image():
     print("Received request to create image")
     if 'image' in request.files:
@@ -111,6 +110,7 @@ def create_image():
     else:
         print("No file provided")
         return jsonify({'error': 'No file provided'}), 400
+
 # PUT route to update an existing image
 @api.route('/images/<int:image_id>', methods=['PUT'])
 def update_image(image_id):
