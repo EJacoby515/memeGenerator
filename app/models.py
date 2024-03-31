@@ -58,7 +58,7 @@ class User(db.Model, UserMixin):
 class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(100), nullable=False)
-    data = db.Column(db.LargeBinary, nullable=False)
+    data = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.String(100), nullable=False)
 
     def __init__(self, filename, data, user_id):
