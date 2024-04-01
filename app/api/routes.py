@@ -110,7 +110,7 @@ def update_image(image_id):
     print('recived update data:', data)
 
     if 'filename' in data:
-        image.filname = data['filename']
+        image.filename = data['filename']
         print('updated filename:', image.filename)
 
     if 'user_id' in data:
