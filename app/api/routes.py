@@ -105,9 +105,14 @@ def create_image():
 @api.route('/images/<int:image_id>', methods=['PUT'])
 def update_image(image_id):
     image = DBImage.query.get_or_404(image_id)
-    data = request.json  # Assuming request body contains JSON data
-    image.filename = data.get('filename', image.filename)
-    image.user_id = data.get('user_id', image.user_id)
+    data = request.json
+
+    if 'filename' in data:
+        image.filname = data['filename']
+
+    if 'user_id' in data:
+        image.user_id = data['user_id']
+
     db.session.commit()
     return jsonify({'message': 'Image updated successfully'}), 200
 
