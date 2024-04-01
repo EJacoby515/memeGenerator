@@ -11,7 +11,7 @@ from flask_migrate import Migrate
 
 def create_app():
     app = Flask(__name__, static_url_path='/static')
-    CORS(app)
+    CORS(app, resources  = {r'/api/*': {'origins': '*'}})
 
     
 
