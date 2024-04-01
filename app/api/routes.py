@@ -107,8 +107,11 @@ def update_image(image_id):
     image = DBImage.query.get_or_404(image_id)
     data = request.json
 
+    print('recived update data:', data)
+
     if 'filename' in data:
         image.filname = data['filename']
+        print('updated filename:', image.filename)
 
     if 'user_id' in data:
         image.user_id = data['user_id']
